@@ -138,7 +138,7 @@ export default function SettingsPage() {
               </SettingRow>
               <SettingRow
                 label="Market News"
-                description="Get breaking crypto news notifications"
+                description="Get breaking market news notifications"
               >
                 <ToggleSwitch
                   checked={settings.marketNews}

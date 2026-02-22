@@ -68,9 +68,9 @@ const stats = [
 
 export default function DashboardPage() {
   const { data: marketData } = useMarketData();
-  const cryptoAssets = marketData ?? [];
+  const assets = marketData ?? [];
 
-  const topMovers = [...cryptoAssets]
+  const topMovers = [...assets]
     .sort(
       (a, b) =>
         Math.abs(b.price_change_percentage_24h) -

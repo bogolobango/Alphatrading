@@ -6,7 +6,7 @@ import { Bell, Search, User, X, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useTradingStore } from "@/stores/trading-store";
-import { mockCryptoAssets } from "@/data/mock-data";
+import { mockMarketAssets } from "@/data/mock-data";
 import { formatCurrency } from "@/lib/utils";
 
 export function Header() {
@@ -17,7 +17,7 @@ export function Header() {
   const { settings, setMobileSidebarOpen } = useTradingStore();
 
   const results = search.length > 0
-    ? mockCryptoAssets.filter(
+    ? mockMarketAssets.filter(
         (a) =>
           a.name.toLowerCase().includes(search.toLowerCase()) ||
           a.symbol.toLowerCase().includes(search.toLowerCase())
@@ -48,7 +48,7 @@ export function Header() {
         <div className="relative min-w-0 flex-1 max-w-xs sm:max-w-sm md:max-w-md" ref={ref}>
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
           <Input
-            placeholder="Search markets..."
+            placeholder="Search stocks & ETFs..."
             className="w-full pl-9"
             value={search}
             onChange={(e) => {

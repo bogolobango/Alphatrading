@@ -1,27 +1,40 @@
-export interface CryptoAsset {
+export type AssetType = "stock" | "etf" | "option" | "crypto";
+
+export interface MarketAsset {
   id: string;
   symbol: string;
   name: string;
-  image: string;
+  assetType: AssetType;
   current_price: number;
   market_cap: number;
   market_cap_rank: number;
   total_volume: number;
   price_change_percentage_24h: number;
   price_change_percentage_7d?: number;
-  circulating_supply: number;
-  total_supply: number | null;
   sparkline_in_7d?: { price: number[] };
+  // Stock/ETF specific
+  exchange?: string;
+  sector?: string;
+  pe_ratio?: number;
+  dividend_yield?: number;
+  eps?: number;
+  // Crypto specific
+  circulating_supply?: number;
+  total_supply?: number | null;
 }
+
+// Backward compat alias
+export type CryptoAsset = MarketAsset;
 
 export interface PortfolioHolding {
   id: string;
   symbol: string;
   name: string;
+  assetType: AssetType;
   amount: number;
   avgBuyPrice: number;
   currentPrice: number;
-  image: string;
+  image?: string;
 }
 
 export interface Trade {
@@ -50,7 +63,7 @@ export interface NewsItem {
   url: string;
   publishedAt: string;
   sentiment: "positive" | "negative" | "neutral";
-  currencies: string[];
+  tickers: string[];
   summary: string;
 }
 

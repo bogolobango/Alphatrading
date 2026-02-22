@@ -87,7 +87,7 @@ export default function MarketsPage() {
       <div>
         <h1 className="text-xl sm:text-2xl font-bold text-white">Markets</h1>
         <p className="text-sm text-zinc-500">
-          Live cryptocurrency prices and market data
+          Live stock, ETF, and market data
         </p>
       </div>
 
@@ -166,11 +166,11 @@ export default function MarketsPage() {
       <Card>
         <CardHeader>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <CardTitle>All Cryptocurrencies</CardTitle>
+            <CardTitle>All Securities</CardTitle>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
               <Input
-                placeholder="Search coins..."
+                placeholder="Search stocks & ETFs..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"

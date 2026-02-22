@@ -48,7 +48,7 @@ export default function NewsPage() {
       <div>
         <h1 className="text-xl sm:text-2xl font-bold text-white">News & Research</h1>
         <p className="text-sm text-zinc-500">
-          Stay updated with the latest crypto news and market sentiment
+          Stay updated with the latest market news and sentiment
         </p>
       </div>
 
@@ -142,7 +142,7 @@ export default function NewsPage() {
                       {news.summary}
                     </p>
                     <div className="flex items-center gap-2">
-                      {news.currencies.map((c) => (
+                      {news.tickers.map((c) => (
                         <Badge key={c} variant="info">
                           {c}
                         </Badge>

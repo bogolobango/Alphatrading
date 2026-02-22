@@ -35,7 +35,7 @@ const timeframes: TimeFrame[] = ["1m", "5m", "15m", "1h", "4h", "1D", "1W"];
 
 const tradingPairs = mockCryptoAssets.slice(0, 8).map((a) => ({
   id: a.id,
-  symbol: `${a.symbol.toUpperCase()}/USDT`,
+  symbol: a.symbol.toUpperCase(),
   name: a.name,
   price: a.current_price,
   change: a.price_change_percentage_24h,
@@ -140,7 +140,7 @@ export default function TradePage() {
               {formatPercent(asset.price_change_percentage_24h)}
             </Badge>
           </div>
-          <p className="text-sm text-zinc-500">{asset.name} / Tether USD</p>
+          <p className="text-sm text-zinc-500">{asset.name} &middot; {(asset as { exchange?: string }).exchange ?? "NASDAQ"}</p>
         </div>
         <div className="text-left sm:text-right">
           <p className="text-2xl sm:text-3xl font-bold text-white">
@@ -215,7 +215,7 @@ export default function TradePage() {
 
                 {orderType === "limit" && (
                   <div>
-                    <label className="mb-1.5 block text-xs text-zinc-400">Price (USDT)</label>
+                    <label className="mb-1.5 block text-xs text-zinc-400">Price (USD)</label>
                     <Input
                       type="number"
                       value={price}
@@ -227,7 +227,7 @@ export default function TradePage() {
 
                 <div>
                   <label className="mb-1.5 block text-xs text-zinc-400">
-                    Amount ({asset.symbol.toUpperCase()})
+                    Shares
                   </label>
                   <Input
                     type="number"
@@ -292,8 +292,8 @@ export default function TradePage() {
           <CardContent>
             <div className="space-y-1 overflow-x-auto">
               <div className="grid grid-cols-3 text-xs text-zinc-500 pb-2 min-w-[280px]">
-                <span>Price (USDT)</span>
-                <span className="text-center">Amount ({asset.symbol.toUpperCase()})</span>
+                <span>Price (USD)</span>
+                <span className="text-center">Size</span>
                 <span className="text-right">Total</span>
               </div>
               {orderBook.asks
@@ -306,8 +306,8 @@ export default function TradePage() {
                       style={{ width: `${Math.min((entry.total / orderBook.asks[7].total) * 100, 100)}%` }}
                     />
                     <span className="relative text-red-400">{formatNumber(entry.price)}</span>
-                    <span className="relative text-center text-zinc-300">{entry.amount.toFixed(4)}</span>
-                    <span className="relative text-right text-zinc-500">{entry.total.toFixed(4)}</span>
+                    <span className="relative text-center text-zinc-300">{entry.amount.toLocaleString()}</span>
+                    <span className="relative text-right text-zinc-500">{entry.total.toLocaleString()}</span>
                   </div>
                 ))}
               <div className="border-y border-zinc-800 py-2 text-center">
@@ -320,8 +320,8 @@ export default function TradePage() {
                     style={{ width: `${Math.min((entry.total / orderBook.bids[7].total) * 100, 100)}%` }}
                   />
                   <span className="relative text-emerald-400">{formatNumber(entry.price)}</span>
-                  <span className="relative text-center text-zinc-300">{entry.amount.toFixed(4)}</span>
-                  <span className="relative text-right text-zinc-500">{entry.total.toFixed(4)}</span>
+                  <span className="relative text-center text-zinc-300">{entry.amount.toLocaleString()}</span>
+                  <span className="relative text-right text-zinc-500">{entry.total.toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -352,7 +352,7 @@ export default function TradePage() {
                       {trade.type.toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-zinc-300">{trade.symbol}/USDT</span>
+                  <span className="text-zinc-300">{trade.symbol}</span>
                   <span className="text-right text-zinc-300">{formatCurrency(trade.total)}</span>
                   <span className="text-right text-zinc-500">{format(trade.timestamp, "MMM d, HH:mm")}</span>
                 </div>
