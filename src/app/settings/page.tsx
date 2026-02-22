@@ -65,14 +65,14 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Settings</h1>
         <p className="text-sm text-zinc-500">
           Manage your account and preferences
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3">
+        <div className="md:col-span-2 space-y-4 sm:space-y-6">
           {/* Profile */}
           <Card>
             <CardHeader>
@@ -82,7 +82,7 @@ export default function SettingsPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-xs text-zinc-400">
                     Display Name
@@ -170,7 +170,7 @@ export default function SettingsPage() {
                 label="Theme"
                 description="Choose your preferred theme"
               >
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {(["dark", "light", "system"] as const).map((t) => (
                     <Button
                       key={t}
@@ -208,7 +208,7 @@ export default function SettingsPage() {
                 label="Default Order Type"
                 description="Default order type for new trades"
               >
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {(["market", "limit"] as const).map((t) => (
                     <Button
                       key={t}
@@ -246,7 +246,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">

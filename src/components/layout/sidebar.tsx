@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
+  X,
 } from "lucide-react";
 
 const navigation = [
@@ -25,63 +26,114 @@ const navigation = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+function SidebarNav({
+  collapsed,
+  onNavClick,
+}: {
+  collapsed: boolean;
+  onNavClick?: () => void;
+}) {
   const pathname = usePathname();
-  const { sidebarCollapsed, _hydrated, toggleSidebar } = useTradingStore();
+
+  return (
+    <nav className="flex-1 space-y-1 p-3">
+      {navigation.map((item) => {
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.name}
+            href={item.href}
+            onClick={onNavClick}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              isActive
+                ? "bg-blue-600/10 text-blue-400"
+                : "text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200"
+            )}
+          >
+            <item.icon className="h-5 w-5 shrink-0" />
+            {!collapsed && <span>{item.name}</span>}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+export function Sidebar() {
+  const { sidebarCollapsed, _hydrated, toggleSidebar, mobileSidebarOpen, setMobileSidebarOpen } =
+    useTradingStore();
   const collapsed = _hydrated ? sidebarCollapsed : false;
 
   return (
-    <aside
-      className={cn(
-        "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-zinc-800 bg-zinc-950 transition-all duration-300",
-        collapsed ? "w-16" : "w-60"
-      )}
-    >
-      {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-zinc-800 px-4">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600">
-          <TrendingUp className="h-4 w-4 text-white" />
-        </div>
-        {!collapsed && (
-          <span className="text-lg font-bold text-white">AlphaTrading</span>
+    <>
+      {/* Desktop sidebar */}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 z-40 hidden h-screen flex-col border-r border-zinc-800 bg-zinc-950 transition-all duration-300 md:flex",
+          collapsed ? "w-16" : "w-60"
         )}
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 space-y-1 p-3">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-blue-600/10 text-blue-400"
-                  : "text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200"
-              )}
-            >
-              <item.icon className="h-5 w-5 shrink-0" />
-              {!sidebarCollapsed && <span>{item.name}</span>}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Collapse Toggle */}
-      <div className="border-t border-zinc-800 p-3">
-        <button
-          onClick={toggleSidebar}
-          className="flex w-full items-center justify-center rounded-lg py-2 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
-        >
-          {collapsed ? (
-            <ChevronRight className="h-5 w-5" />
-          ) : (
-            <ChevronLeft className="h-5 w-5" />
+      >
+        <div className="flex h-16 items-center gap-3 border-b border-zinc-800 px-4">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600">
+            <TrendingUp className="h-4 w-4 text-white" />
+          </div>
+          {!collapsed && (
+            <span className="text-lg font-bold text-white">AlphaTrading</span>
           )}
-        </button>
-      </div>
-    </aside>
+        </div>
+
+        <SidebarNav collapsed={collapsed} />
+
+        <div className="border-t border-zinc-800 p-3">
+          <button
+            onClick={toggleSidebar}
+            className="flex w-full items-center justify-center rounded-lg py-2 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
+          >
+            {collapsed ? (
+              <ChevronRight className="h-5 w-5" />
+            ) : (
+              <ChevronLeft className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-zinc-800 bg-zinc-950 transition-transform duration-300 md:hidden",
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="flex h-16 items-center justify-between border-b border-zinc-800 px-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600">
+              <TrendingUp className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-lg font-bold text-white">AlphaTrading</span>
+          </div>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <SidebarNav
+          collapsed={false}
+          onNavClick={() => setMobileSidebarOpen(false)}
+        />
+      </aside>
+    </>
   );
 }

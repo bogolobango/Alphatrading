@@ -11,8 +11,8 @@ export function AllocationChart({ data }: AllocationChartProps) {
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
   return (
-    <div className="flex items-center gap-6">
-      <ResponsiveContainer width={160} height={160}>
+    <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+      <ResponsiveContainer width={140} height={140}>
         <PieChart>
           <Pie
             data={data}

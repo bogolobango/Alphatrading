@@ -22,6 +22,9 @@ export function CandlestickChart({ data }: CandlestickChartProps) {
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
+    const containerWidth = chartContainerRef.current.clientWidth;
+    const chartHeight = containerWidth < 640 ? 250 : containerWidth < 1024 ? 320 : 400;
+
     const chart = createChart(chartContainerRef.current, {
       layout: {
         background: { type: ColorType.Solid, color: "transparent" },
@@ -43,8 +46,8 @@ export function CandlestickChart({ data }: CandlestickChartProps) {
         borderColor: "#27272a",
         timeVisible: true,
       },
-      width: chartContainerRef.current.clientWidth,
-      height: 400,
+      width: containerWidth,
+      height: chartHeight,
     });
 
     const candlestickSeries = chart.addSeries(CandlestickSeries, {
@@ -89,9 +92,9 @@ export function CandlestickChart({ data }: CandlestickChartProps) {
 
     const handleResize = () => {
       if (chartContainerRef.current) {
-        chart.applyOptions({
-          width: chartContainerRef.current.clientWidth,
-        });
+        const w = chartContainerRef.current.clientWidth;
+        const h = w < 640 ? 250 : w < 1024 ? 320 : 400;
+        chart.applyOptions({ width: w, height: h });
       }
     };
 

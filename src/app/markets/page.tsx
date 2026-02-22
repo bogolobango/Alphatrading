@@ -85,14 +85,14 @@ export default function MarketsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Markets</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Markets</h1>
         <p className="text-sm text-zinc-500">
           Live cryptocurrency prices and market data
         </p>
       </div>
 
       {/* Gainers / Losers */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -165,9 +165,9 @@ export default function MarketsPage() {
       {/* Search + Table */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle>All Cryptocurrencies</CardTitle>
-            <div className="relative w-64">
+            <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
               <Input
                 placeholder="Search coins..."
@@ -178,15 +178,15 @@ export default function MarketsPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
-          <table className="w-full">
+        <CardContent className="p-0 overflow-x-auto">
+          <table className="w-full min-w-[600px]">
             <thead>
               <tr className="border-b border-zinc-800 text-left text-xs text-zinc-500">
-                <th className="w-10 px-5 py-3" />
-                <th className="px-5 py-3 font-medium">#</th>
-                <th className="px-5 py-3 font-medium">Name</th>
+                <th className="w-10 px-3 sm:px-5 py-3" />
+                <th className="px-3 sm:px-5 py-3 font-medium">#</th>
+                <th className="px-3 sm:px-5 py-3 font-medium">Name</th>
                 <th
-                  className="cursor-pointer px-5 py-3 font-medium"
+                  className="cursor-pointer px-3 sm:px-5 py-3 font-medium"
                   onClick={() => handleSort("price")}
                 >
                   <span className="flex items-center gap-1">
@@ -194,23 +194,23 @@ export default function MarketsPage() {
                   </span>
                 </th>
                 <th
-                  className="cursor-pointer px-5 py-3 font-medium"
+                  className="cursor-pointer px-3 sm:px-5 py-3 font-medium"
                   onClick={() => handleSort("change")}
                 >
                   <span className="flex items-center gap-1">
                     24h % <ArrowUpDown className="h-3 w-3" />
                   </span>
                 </th>
-                <th className="px-5 py-3 font-medium">7d Chart</th>
+                <th className="hidden md:table-cell px-3 sm:px-5 py-3 font-medium">7d Chart</th>
                 <th
-                  className="cursor-pointer px-5 py-3 font-medium text-right"
+                  className="cursor-pointer px-3 sm:px-5 py-3 font-medium text-right"
                   onClick={() => handleSort("market_cap")}
                 >
                   <span className="flex items-center justify-end gap-1">
                     Market Cap <ArrowUpDown className="h-3 w-3" />
                   </span>
                 </th>
-                <th className="px-5 py-3 font-medium text-right">Volume (24h)</th>
+                <th className="hidden sm:table-cell px-3 sm:px-5 py-3 font-medium text-right">Volume (24h)</th>
               </tr>
             </thead>
             <tbody>
@@ -219,7 +219,7 @@ export default function MarketsPage() {
                   key={asset.id}
                   className="border-b border-zinc-800/50 transition-colors hover:bg-zinc-800/30"
                 >
-                  <td className="px-5 py-4">
+                  <td className="px-3 sm:px-5 py-4">
                     <button
                       onClick={() => toggleWatchlist(asset)}
                       className="text-zinc-600 transition-colors hover:text-yellow-400"
@@ -233,16 +233,16 @@ export default function MarketsPage() {
                       />
                     </button>
                   </td>
-                  <td className="px-5 py-4 text-sm text-zinc-500">
+                  <td className="px-3 sm:px-5 py-4 text-sm text-zinc-500">
                     {asset.market_cap_rank}
                   </td>
-                  <td className="px-5 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-xs font-bold text-zinc-300">
+                  <td className="px-3 sm:px-5 py-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-xs font-bold text-zinc-300">
                         {asset.symbol.toUpperCase().slice(0, 2)}
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-zinc-200">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-zinc-200 truncate">
                           {asset.name}
                         </p>
                         <p className="text-xs text-zinc-500">
@@ -251,10 +251,10 @@ export default function MarketsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-sm font-medium text-zinc-200">
+                  <td className="px-3 sm:px-5 py-4 text-sm font-medium text-zinc-200">
                     {formatCurrency(asset.current_price)}
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="px-3 sm:px-5 py-4">
                     <span
                       className={`text-sm font-medium ${getChangeColor(
                         asset.price_change_percentage_24h
@@ -263,7 +263,7 @@ export default function MarketsPage() {
                       {formatPercent(asset.price_change_percentage_24h)}
                     </span>
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="hidden md:table-cell px-3 sm:px-5 py-4">
                     <div className="w-24">
                       {asset.sparkline_in_7d && (
                         <SparklineChart
@@ -274,10 +274,10 @@ export default function MarketsPage() {
                       )}
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-right text-sm text-zinc-300">
+                  <td className="px-3 sm:px-5 py-4 text-right text-sm text-zinc-300">
                     {formatCompactNumber(asset.market_cap)}
                   </td>
-                  <td className="px-5 py-4 text-right text-sm text-zinc-500">
+                  <td className="hidden sm:table-cell px-3 sm:px-5 py-4 text-right text-sm text-zinc-500">
                     {formatCompactNumber(asset.total_volume)}
                   </td>
                 </tr>

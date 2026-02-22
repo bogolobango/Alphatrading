@@ -11,6 +11,7 @@ interface TradingState {
   selectedPair: string;
   selectedTimeframe: string;
   sidebarCollapsed: boolean;
+  mobileSidebarOpen: boolean;
 
   // Settings
   settings: {
@@ -41,6 +42,7 @@ interface TradingState {
   setSelectedPair: (pair: string) => void;
   setSelectedTimeframe: (tf: string) => void;
   toggleSidebar: () => void;
+  setMobileSidebarOpen: (open: boolean) => void;
   updateSettings: (patch: Partial<TradingState["settings"]>) => void;
   clearTradeHistory: () => void;
   resetSettings: () => void;
@@ -77,6 +79,7 @@ export const useTradingStore = create<TradingState>()(
       selectedPair: "BTC/USDT",
       selectedTimeframe: "1D",
       sidebarCollapsed: false,
+      mobileSidebarOpen: false,
       settings: { ...defaultSettings },
 
       setHydrated: () => set({ _hydrated: true }),
@@ -111,6 +114,7 @@ export const useTradingStore = create<TradingState>()(
       setSelectedTimeframe: (tf) => set({ selectedTimeframe: tf }),
       toggleSidebar: () =>
         set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+      setMobileSidebarOpen: (open) => set({ mobileSidebarOpen: open }),
 
       updateSettings: (patch) =>
         set((state) => ({ settings: { ...state.settings, ...patch } })),

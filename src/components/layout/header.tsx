@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, Search, User, X } from "lucide-react";
+import { Bell, Search, User, X, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useTradingStore } from "@/stores/trading-store";
@@ -14,7 +14,7 @@ export function Header() {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const { settings } = useTradingStore();
+  const { settings, setMobileSidebarOpen } = useTradingStore();
 
   const results = search.length > 0
     ? mockCryptoAssets.filter(
@@ -35,13 +35,21 @@ export function Header() {
   }, []);
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-zinc-800 bg-zinc-950/80 px-6 backdrop-blur-sm">
-      <div className="flex items-center gap-4">
-        <div className="relative" ref={ref}>
+    <header className="flex h-16 items-center justify-between border-b border-zinc-800 bg-zinc-950/80 px-3 sm:px-4 md:px-6 gap-2 backdrop-blur-sm">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMobileSidebarOpen(true)}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
+        <div className="relative min-w-0 flex-1 max-w-xs sm:max-w-sm md:max-w-md" ref={ref}>
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
           <Input
-            placeholder="Search markets, coins..."
-            className="w-80 pl-9"
+            placeholder="Search markets..."
+            className="w-full pl-9"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -72,11 +80,11 @@ export function Header() {
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-800 text-[10px] font-bold text-zinc-300">
                     {coin.symbol.toUpperCase().slice(0, 2)}
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-zinc-200">{coin.name}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-zinc-200 truncate">{coin.name}</p>
                     <p className="text-xs text-zinc-500">{coin.symbol.toUpperCase()}</p>
                   </div>
-                  <span className="text-sm text-zinc-300">{formatCurrency(coin.current_price)}</span>
+                  <span className="text-sm text-zinc-300 shrink-0">{formatCurrency(coin.current_price)}</span>
                 </button>
               ))}
             </div>
@@ -88,12 +96,12 @@ export function Header() {
           )}
         </div>
       </div>
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" className="relative">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <Button variant="ghost" size="icon" className="relative hidden sm:inline-flex">
           <Bell className="h-5 w-5" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-blue-500" />
         </Button>
-        <div className="flex items-center gap-3 rounded-lg border border-zinc-800 px-3 py-1.5">
+        <div className="hidden md:flex items-center gap-3 rounded-lg border border-zinc-800 px-3 py-1.5">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-700">
             <User className="h-4 w-4 text-zinc-300" />
           </div>
@@ -101,6 +109,9 @@ export function Header() {
             <p className="font-medium text-zinc-200">{settings.displayName}</p>
             <p className="text-xs text-zinc-500">Pro Account</p>
           </div>
+        </div>
+        <div className="flex md:hidden h-9 w-9 items-center justify-center rounded-full bg-zinc-700">
+          <User className="h-4 w-4 text-zinc-300" />
         </div>
       </div>
     </header>

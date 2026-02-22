@@ -81,14 +81,14 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Dashboard</h1>
         <p className="text-sm text-zinc-500">
           Welcome back. Here&apos;s your portfolio overview.
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.label}>
             <CardContent className="p-5">
@@ -109,7 +109,7 @@ export default function DashboardPage() {
                 </Badge>
               </div>
               <div className="mt-3">
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-lg sm:text-2xl font-bold text-white">{stat.value}</p>
                 <p className="text-xs text-zinc-500">{stat.label}</p>
               </div>
             </CardContent>
@@ -118,8 +118,8 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3">
+        <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle>Portfolio Performance</CardTitle>
           </CardHeader>
@@ -139,7 +139,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Holdings + Top Movers */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
         {/* Holdings */}
         <Card>
           <CardHeader>
@@ -225,8 +225,8 @@ export default function DashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-20">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="hidden sm:block w-20">
                       {asset.sparkline_in_7d && (
                         <SparklineChart
                           data={asset.sparkline_in_7d.price.slice(-24)}
@@ -235,7 +235,7 @@ export default function DashboardPage() {
                         />
                       )}
                     </div>
-                    <div className="w-24 text-right">
+                    <div className="text-right">
                       <p className="text-sm font-medium text-zinc-200">
                         {formatCurrency(asset.current_price)}
                       </p>

@@ -46,14 +46,14 @@ export default function NewsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">News & Research</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-white">News & Research</h1>
         <p className="text-sm text-zinc-500">
           Stay updated with the latest crypto news and market sentiment
         </p>
       </div>
 
       {/* Sentiment Overview */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-3">
         <Card>
           <CardContent className="flex items-center gap-4 p-5">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-400/10">
@@ -96,7 +96,7 @@ export default function NewsPage() {
       </div>
 
       {/* Filter */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Filter className="h-4 w-4 text-zinc-500" />
         {(["all", "positive", "negative", "neutral"] as const).map((f) => (
           <Button
@@ -120,7 +120,7 @@ export default function NewsPage() {
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <Badge variant={sentimentVariant[news.sentiment]} className="gap-1">
                         <SentimentIcon className="h-3 w-3" />
                         {news.sentiment}
@@ -135,7 +135,7 @@ export default function NewsPage() {
                         })}
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-zinc-100">
+                    <h3 className="text-base sm:text-lg font-semibold text-zinc-100">
                       {news.title}
                     </h3>
                     <p className="text-sm leading-relaxed text-zinc-400">
@@ -149,7 +149,7 @@ export default function NewsPage() {
                       ))}
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" className="shrink-0">
+                  <Button variant="ghost" size="icon" className="shrink-0 hidden sm:inline-flex">
                     <ExternalLink className="h-4 w-4" />
                   </Button>
                 </div>

@@ -17,11 +17,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           "transition-all duration-300",
-          collapsed ? "ml-16" : "ml-60"
+          collapsed ? "md:ml-16" : "md:ml-60"
         )}
       >
         <Header />
-        <main className="p-6">{children}</main>
+        <main className="p-3 sm:p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

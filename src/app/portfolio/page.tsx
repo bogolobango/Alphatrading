@@ -47,9 +47,9 @@ export default function PortfolioPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Portfolio</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-white">Portfolio</h1>
           <p className="text-sm text-zinc-500">
             Track your holdings and performance
           </p>
@@ -61,7 +61,7 @@ export default function PortfolioPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 md:grid-cols-3">
         <Card>
           <CardContent className="p-5">
             <p className="text-xs text-zinc-500">Total Value</p>
@@ -111,16 +111,16 @@ export default function PortfolioPage() {
 
         <TabsContent value="holdings">
           <Card>
-            <CardContent className="p-0">
-              <table className="w-full">
+            <CardContent className="p-0 overflow-x-auto">
+              <table className="w-full min-w-[600px]">
                 <thead>
                   <tr className="border-b border-zinc-800 text-left text-xs text-zinc-500">
-                    <th className="px-5 py-3 font-medium">Asset</th>
-                    <th className="px-5 py-3 font-medium">Holdings</th>
-                    <th className="px-5 py-3 font-medium">Avg. Buy Price</th>
-                    <th className="px-5 py-3 font-medium">Current Price</th>
-                    <th className="px-5 py-3 font-medium">Value</th>
-                    <th className="px-5 py-3 font-medium text-right">P&L</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Asset</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Holdings</th>
+                    <th className="hidden sm:table-cell px-3 sm:px-5 py-3 font-medium">Avg. Buy Price</th>
+                    <th className="hidden sm:table-cell px-3 sm:px-5 py-3 font-medium">Current Price</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Value</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium text-right">P&L</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -135,13 +135,13 @@ export default function PortfolioPage() {
                         key={holding.id}
                         className="border-b border-zinc-800/50 transition-colors hover:bg-zinc-800/30"
                       >
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-xs font-bold text-zinc-300">
+                        <td className="px-3 sm:px-5 py-4">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-xs font-bold text-zinc-300">
                               {holding.symbol.slice(0, 2)}
                             </div>
-                            <div>
-                              <p className="text-sm font-medium text-zinc-200">
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-zinc-200 truncate">
                                 {holding.name}
                               </p>
                               <p className="text-xs text-zinc-500">
@@ -150,19 +150,19 @@ export default function PortfolioPage() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-5 py-4 text-sm text-zinc-300">
+                        <td className="px-3 sm:px-5 py-4 text-sm text-zinc-300">
                           {holding.amount} {holding.symbol}
                         </td>
-                        <td className="px-5 py-4 text-sm text-zinc-300">
+                        <td className="hidden sm:table-cell px-3 sm:px-5 py-4 text-sm text-zinc-300">
                           {formatCurrency(holding.avgBuyPrice)}
                         </td>
-                        <td className="px-5 py-4 text-sm text-zinc-300">
+                        <td className="hidden sm:table-cell px-3 sm:px-5 py-4 text-sm text-zinc-300">
                           {formatCurrency(holding.currentPrice)}
                         </td>
-                        <td className="px-5 py-4 text-sm font-medium text-zinc-200">
+                        <td className="px-3 sm:px-5 py-4 text-sm font-medium text-zinc-200">
                           {formatCurrency(value)}
                         </td>
-                        <td className="px-5 py-4 text-right">
+                        <td className="px-3 sm:px-5 py-4 text-right">
                           <div className="flex items-center justify-end gap-2">
                             <span
                               className={`text-sm font-medium ${getChangeColor(
@@ -212,18 +212,18 @@ export default function PortfolioPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
-              <table className="w-full">
+            <CardContent className="p-0 overflow-x-auto">
+              <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-zinc-800 text-left text-xs text-zinc-500">
-                    <th className="px-5 py-3 font-medium">Type</th>
-                    <th className="px-5 py-3 font-medium">Asset</th>
-                    <th className="px-5 py-3 font-medium">Order Type</th>
-                    <th className="px-5 py-3 font-medium">Amount</th>
-                    <th className="px-5 py-3 font-medium">Price</th>
-                    <th className="px-5 py-3 font-medium">Total</th>
-                    <th className="px-5 py-3 font-medium">Status</th>
-                    <th className="px-5 py-3 font-medium text-right">Date</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Type</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Asset</th>
+                    <th className="hidden md:table-cell px-3 sm:px-5 py-3 font-medium">Order Type</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Amount</th>
+                    <th className="hidden sm:table-cell px-3 sm:px-5 py-3 font-medium">Price</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Total</th>
+                    <th className="px-3 sm:px-5 py-3 font-medium">Status</th>
+                    <th className="hidden sm:table-cell px-3 sm:px-5 py-3 font-medium text-right">Date</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -232,7 +232,7 @@ export default function PortfolioPage() {
                       key={trade.id}
                       className="border-b border-zinc-800/50 transition-colors hover:bg-zinc-800/30"
                     >
-                      <td className="px-5 py-4">
+                      <td className="px-3 sm:px-5 py-4">
                         <div className="flex items-center gap-1">
                           {trade.type === "buy" ? (
                             <ArrowUpRight className="h-4 w-4 text-emerald-400" />
@@ -250,22 +250,22 @@ export default function PortfolioPage() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-sm text-zinc-300">
+                      <td className="px-3 sm:px-5 py-4 text-sm text-zinc-300">
                         {trade.name} ({trade.symbol})
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="hidden md:table-cell px-3 sm:px-5 py-4">
                         <Badge>{trade.orderType}</Badge>
                       </td>
-                      <td className="px-5 py-4 text-sm text-zinc-300">
+                      <td className="px-3 sm:px-5 py-4 text-sm text-zinc-300">
                         {trade.amount} {trade.symbol}
                       </td>
-                      <td className="px-5 py-4 text-sm text-zinc-300">
+                      <td className="hidden sm:table-cell px-3 sm:px-5 py-4 text-sm text-zinc-300">
                         {formatCurrency(trade.price)}
                       </td>
-                      <td className="px-5 py-4 text-sm font-medium text-zinc-200">
+                      <td className="px-3 sm:px-5 py-4 text-sm font-medium text-zinc-200">
                         {formatCurrency(trade.total)}
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-3 sm:px-5 py-4">
                         <Badge
                           variant={
                             trade.status === "completed"
@@ -278,7 +278,7 @@ export default function PortfolioPage() {
                           {trade.status}
                         </Badge>
                       </td>
-                      <td className="px-5 py-4 text-right text-sm text-zinc-500">
+                      <td className="hidden sm:table-cell px-3 sm:px-5 py-4 text-right text-sm text-zinc-500">
                         {format(trade.timestamp, "MMM d, yyyy HH:mm")}
                       </td>
                     </tr>

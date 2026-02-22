@@ -99,20 +99,20 @@ export default function TradePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-3">
             {/* Pair selector dropdown */}
             <div className="relative">
               <button
                 onClick={() => setPairDropdownOpen(!pairDropdownOpen)}
-                className="flex items-center gap-2 text-2xl font-bold text-white hover:text-zinc-300 transition-colors"
+                className="flex items-center gap-2 text-lg sm:text-2xl font-bold text-white hover:text-zinc-300 transition-colors"
               >
                 {currentPair.symbol}
                 <ChevronDown className="h-5 w-5" />
               </button>
               {pairDropdownOpen && (
-                <div className="absolute left-0 top-full z-50 mt-2 w-64 rounded-lg border border-zinc-800 bg-zinc-900 py-1 shadow-xl">
+                <div className="absolute left-0 top-full z-50 mt-2 w-full min-w-[220px] sm:w-64 rounded-lg border border-zinc-800 bg-zinc-900 py-1 shadow-xl">
                   {tradingPairs.map((pair) => (
                     <button
                       key={pair.id}
@@ -142,8 +142,8 @@ export default function TradePage() {
           </div>
           <p className="text-sm text-zinc-500">{asset.name} / Tether USD</p>
         </div>
-        <div className="text-right">
-          <p className="text-3xl font-bold text-white">
+        <div className="text-left sm:text-right">
+          <p className="text-2xl sm:text-3xl font-bold text-white">
             {formatCurrency(asset.current_price)}
           </p>
           <p className={`text-sm ${getChangeColor(asset.price_change_percentage_24h)}`}>
@@ -153,13 +153,13 @@ export default function TradePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
         {/* Chart */}
-        <Card className="xl:col-span-3">
+        <Card className="lg:col-span-2 xl:col-span-3">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Price Chart</CardTitle>
-              <div className="flex gap-1">
+              <div className="flex flex-wrap gap-1">
                 {timeframes.map((tf) => (
                   <button
                     key={tf}
@@ -284,14 +284,14 @@ export default function TradePage() {
       </div>
 
       {/* Order Book + Trade History */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Order Book</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-1">
-              <div className="grid grid-cols-3 text-xs text-zinc-500 pb-2">
+            <div className="space-y-1 overflow-x-auto">
+              <div className="grid grid-cols-3 text-xs text-zinc-500 pb-2 min-w-[280px]">
                 <span>Price (USDT)</span>
                 <span className="text-center">Amount ({asset.symbol.toUpperCase()})</span>
                 <span className="text-right">Total</span>
@@ -333,15 +333,15 @@ export default function TradePage() {
             <CardTitle>Recent Trades</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-1">
-              <div className="grid grid-cols-4 text-xs text-zinc-500 pb-2">
+            <div className="space-y-1 overflow-x-auto">
+              <div className="grid grid-cols-4 text-xs text-zinc-500 pb-2 min-w-[320px]">
                 <span>Type</span>
                 <span>Pair</span>
                 <span className="text-right">Amount</span>
                 <span className="text-right">Date</span>
               </div>
               {recentTrades.map((trade) => (
-                <div key={trade.id} className="grid grid-cols-4 items-center py-2 text-xs">
+                <div key={trade.id} className="grid grid-cols-4 items-center py-2 text-xs min-w-[320px]">
                   <div className="flex items-center gap-1">
                     {trade.type === "buy" ? (
                       <ArrowUpRight className="h-3 w-3 text-emerald-400" />
