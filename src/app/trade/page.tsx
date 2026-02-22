@@ -13,12 +13,9 @@ import {
   formatPercent,
   getChangeColor,
 } from "@/lib/utils";
-import {
-  mockCryptoAssets,
-  generateCandlestickData,
-  generateOrderBook,
-} from "@/data/mock-data";
+import { mockMarketAssets, generateOrderBook } from "@/data/mock-data";
 import { useTradingStore } from "@/stores/trading-store";
+import { useMarketData, useCandleData } from "@/lib/hooks";
 import type { TimeFrame } from "@/types";
 import { ArrowUpRight, ArrowDownRight, ChevronDown, Check } from "lucide-react";
 import { format } from "date-fns";
@@ -33,18 +30,6 @@ const CandlestickChart = dynamic(
 
 const timeframes: TimeFrame[] = ["1m", "5m", "15m", "1h", "4h", "1D", "1W"];
 
-const tradingPairs = mockCryptoAssets.slice(0, 8).map((a) => ({
-  id: a.id,
-  symbol: a.symbol.toUpperCase(),
-  name: a.name,
-  price: a.current_price,
-  change: a.price_change_percentage_24h,
-}));
-
-const timeframeDays: Record<TimeFrame, number> = {
-  "1m": 1, "5m": 3, "15m": 7, "1h": 14, "4h": 30, "1D": 90, "1W": 365,
-};
-
 export default function TradePage() {
   const { selectedPair, setSelectedPair, trades, addTrade } = useTradingStore();
   const [selectedTimeframe, setSelectedTimeframe] = useState<TimeFrame>("1D");
@@ -55,13 +40,28 @@ export default function TradePage() {
   const [pairDropdownOpen, setPairDropdownOpen] = useState(false);
   const [orderFeedback, setOrderFeedback] = useState<string | null>(null);
 
-  const currentPair = tradingPairs.find((p) => p.symbol === selectedPair) ?? tradingPairs[0];
-  const asset = mockCryptoAssets.find((a) => a.id === currentPair.id) ?? mockCryptoAssets[0];
+  // Live market data for trading pairs
+  const { data: marketData } = useMarketData();
+  const assets = marketData ?? mockMarketAssets;
 
-  const chartData = useMemo(
-    () => generateCandlestickData(asset.current_price, timeframeDays[selectedTimeframe]),
-    [asset.current_price, selectedTimeframe]
+  const tradingPairs = useMemo(
+    () =>
+      assets.slice(0, 10).map((a) => ({
+        id: a.id,
+        symbol: a.symbol.toUpperCase(),
+        name: a.name,
+        price: a.current_price,
+        change: a.price_change_percentage_24h,
+      })),
+    [assets]
   );
+
+  const currentPair = tradingPairs.find((p) => p.symbol === selectedPair) ?? tradingPairs[0];
+  const asset = assets.find((a) => a.id === currentPair.id) ?? assets[0];
+
+  // Live candlestick data from Polygon
+  const { data: chartData } = useCandleData(currentPair.symbol, selectedTimeframe);
+  const candles = chartData ?? [];
 
   const orderBook = useMemo(
     () => generateOrderBook(asset.current_price),
@@ -140,7 +140,7 @@ export default function TradePage() {
               {formatPercent(asset.price_change_percentage_24h)}
             </Badge>
           </div>
-          <p className="text-sm text-zinc-500">{asset.name} &middot; {(asset as { exchange?: string }).exchange ?? "NASDAQ"}</p>
+          <p className="text-sm text-zinc-500">{asset.name} &middot; {asset.exchange ?? "NASDAQ"}</p>
         </div>
         <div className="text-left sm:text-right">
           <p className="text-2xl sm:text-3xl font-bold text-white">
@@ -177,7 +177,7 @@ export default function TradePage() {
             </div>
           </CardHeader>
           <CardContent>
-            <CandlestickChart data={chartData} />
+            <CandlestickChart data={candles} />
           </CardContent>
         </Card>
 

@@ -6,6 +6,7 @@ import { Bell, Search, User, X, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useTradingStore } from "@/stores/trading-store";
+import { useMarketData } from "@/lib/hooks";
 import { mockMarketAssets } from "@/data/mock-data";
 import { formatCurrency } from "@/lib/utils";
 
@@ -15,9 +16,11 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { settings, setMobileSidebarOpen } = useTradingStore();
+  const { data: marketData } = useMarketData();
+  const assets = marketData ?? mockMarketAssets;
 
   const results = search.length > 0
-    ? mockMarketAssets.filter(
+    ? assets.filter(
         (a) =>
           a.name.toLowerCase().includes(search.toLowerCase()) ||
           a.symbol.toLowerCase().includes(search.toLowerCase())
