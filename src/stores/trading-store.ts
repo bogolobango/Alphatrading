@@ -4,6 +4,7 @@ import type { Trade, WatchlistItem, PriceAlert } from "@/types";
 import { mockTrades } from "@/data/mock-data";
 
 interface TradingState {
+  _hydrated: boolean;
   trades: Trade[];
   watchlist: WatchlistItem[];
   alerts: PriceAlert[];
@@ -11,7 +12,26 @@ interface TradingState {
   selectedTimeframe: string;
   sidebarCollapsed: boolean;
 
+  // Settings
+  settings: {
+    priceAlerts: boolean;
+    tradeConfirmations: boolean;
+    marketNews: boolean;
+    portfolioUpdates: boolean;
+    theme: "dark" | "light" | "system";
+    compactMode: boolean;
+    defaultOrderType: "market" | "limit";
+    confirmOrders: boolean;
+    soundEffects: boolean;
+    currency: string;
+    timezone: string;
+    language: string;
+    displayName: string;
+    email: string;
+  };
+
   // Actions
+  setHydrated: () => void;
   addTrade: (trade: Trade) => void;
   addToWatchlist: (item: WatchlistItem) => void;
   removeFromWatchlist: (id: string) => void;
@@ -21,11 +41,32 @@ interface TradingState {
   setSelectedPair: (pair: string) => void;
   setSelectedTimeframe: (tf: string) => void;
   toggleSidebar: () => void;
+  updateSettings: (patch: Partial<TradingState["settings"]>) => void;
+  clearTradeHistory: () => void;
+  resetSettings: () => void;
 }
+
+const defaultSettings: TradingState["settings"] = {
+  priceAlerts: true,
+  tradeConfirmations: true,
+  marketNews: false,
+  portfolioUpdates: true,
+  theme: "dark",
+  compactMode: false,
+  defaultOrderType: "market",
+  confirmOrders: true,
+  soundEffects: false,
+  currency: "USD",
+  timezone: "UTC",
+  language: "English",
+  displayName: "Trader",
+  email: "trader@alphatrading.com",
+};
 
 export const useTradingStore = create<TradingState>()(
   persist(
     (set) => ({
+      _hydrated: false,
       trades: mockTrades,
       watchlist: [
         { id: "bitcoin", symbol: "BTC", name: "Bitcoin", addedAt: Date.now() },
@@ -36,6 +77,9 @@ export const useTradingStore = create<TradingState>()(
       selectedPair: "BTC/USDT",
       selectedTimeframe: "1D",
       sidebarCollapsed: false,
+      settings: { ...defaultSettings },
+
+      setHydrated: () => set({ _hydrated: true }),
 
       addTrade: (trade) =>
         set((state) => ({ trades: [trade, ...state.trades] })),
@@ -67,14 +111,26 @@ export const useTradingStore = create<TradingState>()(
       setSelectedTimeframe: (tf) => set({ selectedTimeframe: tf }),
       toggleSidebar: () =>
         set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
+
+      updateSettings: (patch) =>
+        set((state) => ({ settings: { ...state.settings, ...patch } })),
+
+      clearTradeHistory: () => set({ trades: [] }),
+      resetSettings: () => set({ settings: { ...defaultSettings } }),
     }),
     {
       name: "alphatrading-store",
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrated();
+      },
       partialize: (state) => ({
+        trades: state.trades,
         watchlist: state.watchlist,
         alerts: state.alerts,
         selectedPair: state.selectedPair,
+        selectedTimeframe: state.selectedTimeframe,
         sidebarCollapsed: state.sidebarCollapsed,
+        settings: state.settings,
       }),
     }
   )

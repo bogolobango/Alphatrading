@@ -10,14 +10,13 @@ import {
   formatPercent,
   formatCompactNumber,
   getChangeColor,
-  getChangeBgColor,
 } from "@/lib/utils";
 import {
   mockPortfolioHoldings,
-  mockCryptoAssets,
   portfolioHistoryData,
   allocationData,
 } from "@/data/mock-data";
+import { useMarketData } from "@/lib/hooks";
 import {
   TrendingUp,
   TrendingDown,
@@ -68,7 +67,10 @@ const stats = [
 ];
 
 export default function DashboardPage() {
-  const topMovers = [...mockCryptoAssets]
+  const { data: marketData } = useMarketData();
+  const cryptoAssets = marketData ?? [];
+
+  const topMovers = [...cryptoAssets]
     .sort(
       (a, b) =>
         Math.abs(b.price_change_percentage_24h) -

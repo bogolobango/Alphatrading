@@ -5,17 +5,15 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SparklineChart } from "@/components/charts/sparkline-chart";
 import {
   formatCurrency,
   formatPercent,
   formatCompactNumber,
   getChangeColor,
-  getChangeBgColor,
 } from "@/lib/utils";
-import { mockCryptoAssets } from "@/data/mock-data";
 import { useTradingStore } from "@/stores/trading-store";
+import { useMarketData } from "@/lib/hooks";
 import {
   Search,
   Star,
@@ -31,8 +29,10 @@ export default function MarketsPage() {
   );
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const { watchlist, addToWatchlist, removeFromWatchlist } = useTradingStore();
+  const { data: marketData } = useMarketData();
+  const cryptoAssets = marketData ?? [];
 
-  const filteredAssets = mockCryptoAssets
+  const filteredAssets = cryptoAssets
     .filter(
       (a) =>
         a.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -61,7 +61,7 @@ export default function MarketsPage() {
 
   const isInWatchlist = (id: string) => watchlist.some((w) => w.id === id);
 
-  const toggleWatchlist = (asset: (typeof mockCryptoAssets)[0]) => {
+  const toggleWatchlist = (asset: (typeof cryptoAssets)[0]) => {
     if (isInWatchlist(asset.id)) {
       removeFromWatchlist(asset.id);
     } else {
@@ -74,11 +74,11 @@ export default function MarketsPage() {
     }
   };
 
-  const gainers = [...mockCryptoAssets]
+  const gainers = [...cryptoAssets]
     .sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h)
     .slice(0, 5);
 
-  const losers = [...mockCryptoAssets]
+  const losers = [...cryptoAssets]
     .sort((a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h)
     .slice(0, 5);
 

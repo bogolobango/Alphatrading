@@ -3,6 +3,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTradingStore } from "@/stores/trading-store";
 import {
   User,
   Bell,
@@ -30,20 +31,37 @@ function SettingRow({ label, description, children }: SettingRowProps) {
   );
 }
 
-function ToggleSwitch({ defaultChecked = false }: { defaultChecked?: boolean }) {
+function ToggleSwitch({
+  checked,
+  onChange,
+}: {
+  checked: boolean;
+  onChange: (val: boolean) => void;
+}) {
   return (
-    <label className="relative inline-flex cursor-pointer items-center">
-      <input
-        type="checkbox"
-        className="peer sr-only"
-        defaultChecked={defaultChecked}
+    <button
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors ${
+        checked ? "bg-blue-600" : "bg-zinc-700"
+      }`}
+    >
+      <span
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full border shadow-sm transition-transform ${
+          checked
+            ? "translate-x-[22px] border-white bg-white"
+            : "translate-x-[2px] border-zinc-600 bg-zinc-400"
+        } mt-[2px]`}
       />
-      <div className="h-6 w-11 rounded-full bg-zinc-700 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-zinc-600 after:bg-zinc-400 after:transition-all peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-checked:after:bg-white" />
-    </label>
+    </button>
   );
 }
 
 export default function SettingsPage() {
+  const { settings, updateSettings, clearTradeHistory, resetSettings } =
+    useTradingStore();
+
   return (
     <div className="space-y-6">
       <div>
@@ -69,18 +87,25 @@ export default function SettingsPage() {
                   <label className="mb-1.5 block text-xs text-zinc-400">
                     Display Name
                   </label>
-                  <Input defaultValue="Trader" />
+                  <Input
+                    value={settings.displayName}
+                    onChange={(e) =>
+                      updateSettings({ displayName: e.target.value })
+                    }
+                  />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-xs text-zinc-400">
                     Email
                   </label>
-                  <Input defaultValue="trader@alphatrading.com" />
+                  <Input
+                    value={settings.email}
+                    onChange={(e) =>
+                      updateSettings({ email: e.target.value })
+                    }
+                  />
                 </div>
               </div>
-              <Button variant="primary" size="sm">
-                Save Changes
-              </Button>
             </CardContent>
           </Card>
 
@@ -97,25 +122,37 @@ export default function SettingsPage() {
                 label="Price Alerts"
                 description="Get notified when prices hit your targets"
               >
-                <ToggleSwitch defaultChecked />
+                <ToggleSwitch
+                  checked={settings.priceAlerts}
+                  onChange={(val) => updateSettings({ priceAlerts: val })}
+                />
               </SettingRow>
               <SettingRow
                 label="Trade Confirmations"
                 description="Receive confirmations for executed trades"
               >
-                <ToggleSwitch defaultChecked />
+                <ToggleSwitch
+                  checked={settings.tradeConfirmations}
+                  onChange={(val) => updateSettings({ tradeConfirmations: val })}
+                />
               </SettingRow>
               <SettingRow
                 label="Market News"
                 description="Get breaking crypto news notifications"
               >
-                <ToggleSwitch />
+                <ToggleSwitch
+                  checked={settings.marketNews}
+                  onChange={(val) => updateSettings({ marketNews: val })}
+                />
               </SettingRow>
               <SettingRow
                 label="Portfolio Updates"
                 description="Daily portfolio performance summary"
               >
-                <ToggleSwitch defaultChecked />
+                <ToggleSwitch
+                  checked={settings.portfolioUpdates}
+                  onChange={(val) => updateSettings({ portfolioUpdates: val })}
+                />
               </SettingRow>
             </CardContent>
           </Card>
@@ -134,22 +171,26 @@ export default function SettingsPage() {
                 description="Choose your preferred theme"
               >
                 <div className="flex gap-2">
-                  <Button variant="primary" size="sm">
-                    Dark
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    Light
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    System
-                  </Button>
+                  {(["dark", "light", "system"] as const).map((t) => (
+                    <Button
+                      key={t}
+                      variant={settings.theme === t ? "primary" : "ghost"}
+                      size="sm"
+                      onClick={() => updateSettings({ theme: t })}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </Button>
+                  ))}
                 </div>
               </SettingRow>
               <SettingRow
                 label="Compact Mode"
                 description="Use a more compact layout for tables and lists"
               >
-                <ToggleSwitch />
+                <ToggleSwitch
+                  checked={settings.compactMode}
+                  onChange={(val) => updateSettings({ compactMode: val })}
+                />
               </SettingRow>
             </CardContent>
           </Card>
@@ -168,25 +209,37 @@ export default function SettingsPage() {
                 description="Default order type for new trades"
               >
                 <div className="flex gap-2">
-                  <Button variant="primary" size="sm">
-                    Market
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    Limit
-                  </Button>
+                  {(["market", "limit"] as const).map((t) => (
+                    <Button
+                      key={t}
+                      variant={
+                        settings.defaultOrderType === t ? "primary" : "ghost"
+                      }
+                      size="sm"
+                      onClick={() => updateSettings({ defaultOrderType: t })}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </Button>
+                  ))}
                 </div>
               </SettingRow>
               <SettingRow
                 label="Confirm Orders"
                 description="Show confirmation dialog before placing orders"
               >
-                <ToggleSwitch defaultChecked />
+                <ToggleSwitch
+                  checked={settings.confirmOrders}
+                  onChange={(val) => updateSettings({ confirmOrders: val })}
+                />
               </SettingRow>
               <SettingRow
                 label="Sound Effects"
                 description="Play sounds for trade executions"
               >
-                <ToggleSwitch />
+                <ToggleSwitch
+                  checked={settings.soundEffects}
+                  onChange={(val) => updateSettings({ soundEffects: val })}
+                />
               </SettingRow>
             </CardContent>
           </Card>
@@ -226,19 +279,34 @@ export default function SettingsPage() {
                 <label className="mb-1.5 block text-xs text-zinc-400">
                   Currency
                 </label>
-                <Input defaultValue="USD" />
+                <Input
+                  value={settings.currency}
+                  onChange={(e) =>
+                    updateSettings({ currency: e.target.value })
+                  }
+                />
               </div>
               <div>
                 <label className="mb-1.5 block text-xs text-zinc-400">
                   Timezone
                 </label>
-                <Input defaultValue="UTC" />
+                <Input
+                  value={settings.timezone}
+                  onChange={(e) =>
+                    updateSettings({ timezone: e.target.value })
+                  }
+                />
               </div>
               <div>
                 <label className="mb-1.5 block text-xs text-zinc-400">
                   Language
                 </label>
-                <Input defaultValue="English" />
+                <Input
+                  value={settings.language}
+                  onChange={(e) =>
+                    updateSettings({ language: e.target.value })
+                  }
+                />
               </div>
             </CardContent>
           </Card>
@@ -248,10 +316,26 @@ export default function SettingsPage() {
               <CardTitle className="text-red-400">Danger Zone</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button variant="outline" className="w-full justify-start text-red-400 border-red-900/50 hover:bg-red-900/20">
+              <Button
+                variant="outline"
+                className="w-full justify-start text-red-400 border-red-900/50 hover:bg-red-900/20"
+                onClick={() => {
+                  if (confirm("Are you sure you want to delete all trade history?")) {
+                    clearTradeHistory();
+                  }
+                }}
+              >
                 Delete All Trade History
               </Button>
-              <Button variant="outline" className="w-full justify-start text-red-400 border-red-900/50 hover:bg-red-900/20">
+              <Button
+                variant="outline"
+                className="w-full justify-start text-red-400 border-red-900/50 hover:bg-red-900/20"
+                onClick={() => {
+                  if (confirm("Are you sure you want to reset all settings?")) {
+                    resetSettings();
+                  }
+                }}
+              >
                 Reset All Settings
               </Button>
             </CardContent>

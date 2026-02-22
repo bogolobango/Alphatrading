@@ -27,13 +27,14 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { sidebarCollapsed, toggleSidebar } = useTradingStore();
+  const { sidebarCollapsed, _hydrated, toggleSidebar } = useTradingStore();
+  const collapsed = _hydrated ? sidebarCollapsed : false;
 
   return (
     <aside
       className={cn(
         "fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-zinc-800 bg-zinc-950 transition-all duration-300",
-        sidebarCollapsed ? "w-16" : "w-60"
+        collapsed ? "w-16" : "w-60"
       )}
     >
       {/* Logo */}
@@ -41,7 +42,7 @@ export function Sidebar() {
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600">
           <TrendingUp className="h-4 w-4 text-white" />
         </div>
-        {!sidebarCollapsed && (
+        {!collapsed && (
           <span className="text-lg font-bold text-white">AlphaTrading</span>
         )}
       </div>
@@ -74,7 +75,7 @@ export function Sidebar() {
           onClick={toggleSidebar}
           className="flex w-full items-center justify-center rounded-lg py-2 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
         >
-          {sidebarCollapsed ? (
+          {collapsed ? (
             <ChevronRight className="h-5 w-5" />
           ) : (
             <ChevronLeft className="h-5 w-5" />

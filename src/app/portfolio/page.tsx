@@ -10,17 +10,15 @@ import {
   formatCurrency,
   formatPercent,
   getChangeColor,
-  getChangeBgColor,
 } from "@/lib/utils";
 import {
   mockPortfolioHoldings,
-  mockTrades,
   portfolioHistoryData,
 } from "@/data/mock-data";
+import { useTradingStore } from "@/stores/trading-store";
 import {
   ArrowUpRight,
   ArrowDownRight,
-  Filter,
   Download,
   TrendingUp,
   TrendingDown,
@@ -40,11 +38,12 @@ const totalPnLPercent = (totalPnL / totalCost) * 100;
 
 export default function PortfolioPage() {
   const [filterType, setFilterType] = useState<"all" | "buy" | "sell">("all");
+  const { trades } = useTradingStore();
 
   const filteredTrades =
     filterType === "all"
-      ? mockTrades
-      : mockTrades.filter((t) => t.type === filterType);
+      ? trades
+      : trades.filter((t) => t.type === filterType);
 
   return (
     <div className="space-y-6">
